@@ -1,9 +1,9 @@
 # Your Project Title Here
-Name: Your Full Name
+Name: Robin Rai
 
-CollegeID: Your College ID
+CollegeID: 160501
 
-Batch: Jan19A/B/C/D?
+Batch: Jan19C
 
 Brief description of the domain of your project!
 
