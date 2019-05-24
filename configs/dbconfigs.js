@@ -11,7 +11,7 @@ sequelize.authenticate()
 .catch(function(err){
 	console.log(err);
 })
-console.log('I am here');
+console.log('I am in sequelize');
 
 module.exports = {
 	sequelize,
