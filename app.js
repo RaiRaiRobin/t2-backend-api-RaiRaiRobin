@@ -28,7 +28,7 @@ myapp.use(express.static(
 
 // sequelize
 var mysequelize = require('./configs/dbconfigs.js');
-
+var mysequelize = require('./models/userModel.js');
 
 
 
