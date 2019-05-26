@@ -8,5 +8,10 @@ module.exports = function(myapp){
         console.log('admin new route');
     });
 
-    //other routes..
+    myapp.get('/admin/dashboard', function(req, res){
+        console.log('admin new route');
+    });
+
+
+
 }
