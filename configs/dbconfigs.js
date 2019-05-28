@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize');
-var sequelize = new Sequelize('node', 'root', '2', {
+var sequelize = new Sequelize('coventry_hospital', 'root', '2', {
 	host: 'localhost',
 	dialect: 'mysql',
 	logging: false
@@ -11,7 +11,7 @@ sequelize.authenticate()
 .catch(function(err){
 	console.log(err);
 })
-console.log('I am in sequelize');
+// console.log('I am in sequelize');
 
 module.exports = {
 	sequelize,

@@ -8,19 +8,54 @@ const myUsers = mysequelize.sequelize.define('myUsers',
 		allowNull : false
 	},
 
-		username: {
+	first_name: {
 		type: mysequelize.Sequelize.STRING,
 		allowNull : false
 	},
 
-		password: {
+	middle_name: {
+		type: mysequelize.Sequelize.STRING,
+		allowNull : true
+	},
+
+	last_name: {
 		type: mysequelize.Sequelize.STRING,
 		allowNull : false
 	},
 
-	userphoto : {
-		type : mysequelize.Sequelize.STRING,
-		allowNull: false
+	gender: {
+		type: mysequelize.Sequelize.STRING,
+		allowNull : false
+	},
+
+	address: {
+		type: mysequelize.Sequelize.STRING,
+		allowNull : false
+	},
+
+	dob: {
+		type: mysequelize.Sequelize.STRING,
+		allowNull : false
+	},
+
+	email: {
+		type: mysequelize.Sequelize.STRING,
+		allowNull : false
+	},
+
+	phone: {
+		type: mysequelize.Sequelize.STRING,
+		allowNull : false
+	},
+
+	photo: {
+		type: mysequelize.Sequelize.STRING,
+		allowNull : false
+	},
+
+	password: {
+		type: mysequelize.Sequelize.STRING,
+		allowNull : false
 	}
 
 },
@@ -33,11 +68,11 @@ const myUsers = mysequelize.sequelize.define('myUsers',
 )
 
 myUsers.sync({force:false})
-.then(function(){
-console.log('users table created')
-})
-.catch(function(){
-	console.log('err creating table')
-})
+// .then(function(){
+// console.log('users table created')
+// })
+// .catch(function(){
+// 	console.log('err creating table')
+// })
 
 module.exports = myUsers;
