@@ -3,8 +3,8 @@ var jwt = require('jsonwebtoken');
 
 function userRegister(req,res, next){
 	usermodel.create({
-	username:'myuser',
-	password:'RRoobbiinn',
+	username:req.body.firstName,
+	password:req.body.password,
 	userphoto:'myphoto',
 	})
 	.then(function(result){
