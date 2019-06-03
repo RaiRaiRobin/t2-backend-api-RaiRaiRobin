@@ -2,8 +2,12 @@
 module.exports = function(myapp){
 
 	// register user
-	myapp.post('/user/register', function(req, res){
+	myapp.post('/user/register/userPhoto', upload.single('UserPhoto'), function(req, res){
         console.log('user new route');
+        res.status(201);
+        res.send({
+            "message": "user photo registered"
+        })
     });
 
     myapp.get('/user/login', function(req, res){

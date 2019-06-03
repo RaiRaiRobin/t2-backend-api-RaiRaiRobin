@@ -32,6 +32,24 @@ var mysequelize = require('./models/userModel.js');
 
 
 
+// multer storage
+var mystorage = multer.diskStorage({
+	destination : function(req,file,cb){
+		cb(null,'resources/uploads')
+	},
+	filename : function(req,file,cb){
+		var name = 'asdasd'+file.originalname+Math.random();
+		// var r = 'asdasd'+Math.random();
+		cb(null,name);	
+		// console.log(req);
+		// console.log(file);
+		console.log(name);
+		// cb(null,'asdasdaa');	
+	}
+	});
+var upload = multer({storage: mystorage});
+
+
 // routes
 var adminRoutes = require('./routes/adminRoutes')(myapp);
 var userRoutes = require('./routes/userRoutes')(myapp);
