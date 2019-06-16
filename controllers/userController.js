@@ -1,4 +1,4 @@
-var usermodel = require('../models/UserModel');
+var usermodel = require('../models/userModel');
 var jwt = require('jsonwebtoken');
 
 function userRegister(req,res, next){
@@ -16,7 +16,7 @@ function userRegister(req,res, next){
 	})	
 }
 
-	function query(req,res){
+function query(req,res){
 		usermodel.findOne({
 	where:{username:'myuser'}
 })
@@ -61,7 +61,7 @@ usermodel.findAll({
 
 
 	// token
-	function token(req, res,next){
+function token(req, res,next){
 		jwt.sign({username:req.body.username, accesslevel:'superadmin'},'thisissecretkey',{expiresIn:'10h'}, 
 			function(err,token){
 				// console.log(token);

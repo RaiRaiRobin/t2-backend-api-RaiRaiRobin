@@ -35,7 +35,7 @@ var mysequelize = require('./models/userModel.js');
 // multer storage
 var mystorage = multer.diskStorage({
 	destination : function(req,file,cb){
-		cb(null,'resources/uploads')
+		cb(null,'resources/images/profile')
 	},
 	filename : function(req,file,cb){
 		var name = 'asdasd'+file.originalname+Math.random();
@@ -49,10 +49,33 @@ var mystorage = multer.diskStorage({
 	});
 var upload = multer({storage: mystorage});
 
+// controllers require
+var userController = require('./controllers/userController');
 
 // routes
 var adminRoutes = require('./routes/adminRoutes')(myapp);
 var userRoutes = require('./routes/userRoutes')(myapp);
+
+
+// upload register profile photo
+myapp.post('/user/register/userPhoto', upload.single('UserPhoto'), function(req, res){
+        // console.log('user photo route');
+        // res.status(200);
+        res.send({
+        	"status":200,
+            "message": "user photo registered"
+        })
+    });
+
+// register form data
+myapp.post('/user/register/userFormData', userController.userRegister, function(req, res){
+        console.log('user register data route');
+        res.status(200);
+        res.send({
+            "message": "user data registered"
+        })
+    });
+
 
 
 
