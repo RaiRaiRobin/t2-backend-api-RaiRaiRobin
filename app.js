@@ -66,12 +66,22 @@ myapp.post('/user/register/userPhoto', upload.single('UserPhoto'), function(req,
 });
 
 // register form data
-myapp.post('/user/register/userFormData', userController.emailCheck, userController.userRegister, function(req, res) {
+myapp.post('/user/register/userFormData', userController.passwordHash, userController.userRegister, function(req, res) {
     // console.log('user register data route');
     // res.status(200);
     res.send({
         "status": 201,
         "message": "user data registered"
+    })
+});
+
+
+// user login route
+myapp.post('/user/login', userController.passwordHash, userController.userRegister, function(req, res) {
+    // res.status(200);
+    res.send({
+        "status": 200,
+        "message": "user logged in"
     })
 });
 

@@ -1,5 +1,7 @@
 var usermodel = require('../models/userModel');
 var jwt = require('jsonwebtoken');
+var bcrypt = require('bcrypt');
+var saltRounds = 10;
 
 function userRegister(req, res, next) {
     // console.log(req.body);
@@ -13,7 +15,7 @@ function userRegister(req, res, next) {
             email: req.body.Email,
             phone: req.body.Phone,
             photo: req.body.Photo,
-            password: req.body.Password
+            password: req.hashValue
         })
         .then(function(result) {
             // console.log('data added');
@@ -95,17 +97,39 @@ function emailCheck(req, res, next) {
             where: { email: req.body.Email }
         })
         .then(function(result) {
-            // console.log(result.dataValues);
+            console.log(result.dataValues);
             if (result.dataValues != '') {
                 next({
                     "status": 409,
                     "message": "email already exists"
                 });
+            } else {
+                next();
             }
         })
         .catch(function(err) {
+            next({
+                "status": 500,
+                "message": "DB Error"
+            });
+        })
+}
+
+
+
+// has password
+function passwordHash(req, res, next) {
+    // req.body.Password
+    bcrypt.hash(req.body.Password, saltRounds)
+        .then(function(hash) {
+            req.hashValue = hash;
+            // console.log(req.hashValue);
             next();
         })
+        .catch(function(err) {
+            console.log(err);
+        })
+
 }
 
 
@@ -115,5 +139,6 @@ module.exports = {
     userRegister,
     query,
     token,
-    emailCheck
+    emailCheck,
+    passwordHash
 }
