@@ -97,21 +97,15 @@ function emailCheck(req, res, next) {
             where: { email: req.body.Email }
         })
         .then(function(result) {
-            console.log(result.dataValues);
             if (result.dataValues != '') {
                 next({
                     "status": 409,
-                    "message": "email already exists"
+                    "message": "Email already exists"
                 });
-            } else {
-                next();
             }
         })
-        .catch(function(err) {
-            next({
-                "status": 500,
-                "message": "DB Error"
-            });
+        .catch(function(result) {
+            next();
         })
 }
 
