@@ -34,23 +34,18 @@ function validator(req, res, next) {
 function checkPasswordMatch(req, res, next) {
     // comapre's first parameter password obtained from login form i.e. req.body.password
     // second parameter the value passed from previous function (from database) through req object
-    bcrypt.compare(req.body.password, req.userHashPassword)
-        .then(function(result) {
-            // next();
-            console.log("password matched");
-            console.log(req.body.password);
-            console.log(req.userHashPassword);
-            // console.log(bcrypt.compare(req.body.password, req.userHashPassword));
+    bcrypt.compare(req.body.password, req.userHashPassword, function(err, res) {
+        // res == true
+        console.log(res);
+        if (res == true) {
             next();
-
-        })
-        .catch(function(err) {
-            console.log("password didn't matched");
+        } else if (res == false) {
             next({
                 "status": 400,
                 "message": "Password Doesnot match"
             });
-        })
+        }
+    });
 }
 
 
