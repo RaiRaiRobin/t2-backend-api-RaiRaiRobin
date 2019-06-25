@@ -22,13 +22,14 @@ myapp.use(bodyParser.urlencoded({ extended: true }));
 
 // path
 myapp.use(express.static(
-    path.join(__dirname, '/public')
+    path.join(__dirname, '/resources')
 ));
 
 
 // sequelize
 var mysequelize = require('./configs/dbconfigs.js');
 var mysequelize = require('./models/userModel.js');
+var mysequelize = require('./models/adminModel.js');
 
 
 
@@ -45,6 +46,7 @@ var mystorage = multer.diskStorage({
     }
 });
 var upload = multer({ storage: mystorage });
+
 
 // controllers require
 var userController = require('./controllers/userController');
@@ -77,14 +79,25 @@ myapp.post('/user/register/userFormData', userController.emailCheck, userControl
     })
 });
 
+// edit user profile data
+myapp.put('/user/edit/userProfileData', userController.userEdit, function(req, res) {
+    // console.log('user register data route');
+    // res.status(200);
+    res.send({
+        "status": 201,
+        "message": "User data updated"
+    })
+});
+
 
 // user login route
 myapp.post('/user/login', authController.validator, authController.checkPasswordMatch, authController.jwtTokenGen, function(req, res) {
     // res.status(200);
     res.send({
         "status": 200,
-        "message": "user logged in",
-        "token": req.genToken
+        "message": "User logged in",
+        "token": req.genToken,
+        "info": req.userInfo
     })
 });
 

@@ -53,6 +53,12 @@ const myUsers = mysequelize.sequelize.define('myUsers',
 		allowNull : false
 	},
 
+	user_type: {
+		type: mysequelize.Sequelize.STRING,
+		allowNull : false,
+		defaultValue : "patient"
+	},
+
 	password: {
 		type: mysequelize.Sequelize.STRING,
 		allowNull : false

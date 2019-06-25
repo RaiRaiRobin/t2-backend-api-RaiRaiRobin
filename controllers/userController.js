@@ -27,6 +27,30 @@ function userRegister(req, res, next) {
 }
 
 
+// user Edit
+function userEdit(req, res, next) {
+    // console.log(req.body);
+    usermodel.update({
+            first_name: req.body.FirstName,
+            middle_name: req.body.MiddleName,
+            last_name: req.body.LastName,
+            address: req.body.Address,
+            dob: req.body.DOB,
+            phone: req.body.Phone,
+        },
+        {
+            where: {id: req.body.Id}
+        })
+        .then(function(result) {
+            // console.log('data added');
+            next();
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
+
 
 function query(req, res) {
     usermodel.findOne({
@@ -50,9 +74,9 @@ function query(req, res) {
         })
 
     // usermodel.update(
-    // 	{ password:'Robin'},
-    // 	{where : {username: 'myuser'}}
-    // 	)
+    //  { password:'Robin'},
+    //  {where : {username: 'myuser'}}
+    //  )
     // .then(function(result){
 
     // })
@@ -61,7 +85,7 @@ function query(req, res) {
     // })
 
     // usermodel.destroy({
-    // 	where:{username:'myuser'}
+    //  where:{username:'myuser'}
     // })
     // .then(function(result){
 
@@ -129,8 +153,10 @@ function passwordHash(req, res, next) {
 
 
 
+
 module.exports = {
     userRegister,
+    userEdit,
     query,
     token,
     emailCheck,

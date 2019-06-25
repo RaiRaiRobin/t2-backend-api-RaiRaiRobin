@@ -16,7 +16,9 @@ function validator(req, res, next) {
         // use had already registered
         .then(function(result) {
             // store the user's hash password obtained from database in a variable and pass it through req object
-            req.userHashPassword = result.dataValues.password
+            req.userHashPassword = result.dataValues.password;
+            req.userInfo = result.dataValues;
+            // console.log(req.userInfo);
             next();
         })
         // err denotes the user was not found - > user was not registerd 
@@ -36,13 +38,13 @@ function checkPasswordMatch(req, res, next) {
     // second parameter the value passed from previous function (from database) through req object
     bcrypt.compare(req.body.password, req.userHashPassword, function(err, res) {
         // res == true
-        console.log(res);
+        // console.log(res);
         if (res == true) {
             next();
         } else if (res == false) {
             next({
                 "status": 400,
-                "message": "Password Doesnot match"
+                "message": "Password does not match"
             });
         }
     });
@@ -54,7 +56,7 @@ function jwtTokenGen(req, res, next) {
 
     jwt.sign({
             email: req.body.email,
-            accessLevel: 'superadmin'
+            accessLevel: 'superuser'
         }, 'thisissecretkey', {
             expiresIn: "10h"
         },
