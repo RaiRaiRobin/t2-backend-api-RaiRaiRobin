@@ -33,6 +33,35 @@ function validator(req, res, next) {
 }
 
 
+// check token email
+function tokenemailvalidator(req, res, next) {
+
+    usermodel.findOne({
+
+            where: {
+                email: req.email
+            }
+        })
+        // use had already registered
+        .then(function(result) {
+            // store the user's hash password obtained from database in a variable and pass it through req object
+            // req.userHashPassword = result.dataValues.password;
+            req.userInfoo = result.dataValues;
+            // console.log(req.userInfo);
+            next();
+        })
+        // err denotes the user was not found - > user was not registerd 
+        .catch(function(err) {
+
+            next({
+                "status": 400,
+                "message": "Invalid user token"
+            })
+
+        })
+}
+
+
 function checkPasswordMatch(req, res, next) {
     // comapre's first parameter password obtained from login form i.e. req.body.password
     // second parameter the value passed from previous function (from database) through req object
@@ -71,12 +100,35 @@ function jwtTokenGen(req, res, next) {
             } else {
                 req.genToken = token;
                 next();
-                // console.log(token)	
+                // console.log(token)   
             }
 
         }
-    )
+    );
 
+}
+
+
+// verify token
+function tokenVerify(req, res, next) {
+    // console.log(req.headers);
+    if (req.headers.authorization == undefined) {
+        next({ status: 500, message: 'no authorization header present' })
+    } else {
+        let token = req.headers.authorization.slice(7, req.headers.authorization.length);
+        // let token = req.headers.authorization;
+
+        jwt.verify(token, 'thisissecretkey', function(err, decoded) {
+            if (err != null) {
+                next({ status: 500, message: err.message })
+                // console.log(err);
+            } else {
+                req.email = decoded.email;
+                req.accessLevel = decoded.accessLevel;
+                next();
+            }
+        });
+    }
 }
 
 
@@ -86,5 +138,7 @@ function jwtTokenGen(req, res, next) {
 module.exports = {
     validator,
     checkPasswordMatch,
-    jwtTokenGen
+    tokenemailvalidator,
+    jwtTokenGen,
+    tokenVerify
 }

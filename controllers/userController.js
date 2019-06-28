@@ -151,6 +151,23 @@ function passwordHash(req, res, next) {
 }
 
 
+// get all user list
+function getAllUserList(req, res, next){
+usermodel.findAll({
+            // where: { username: 'myuser' }
+            raw: true 
+        })
+        .then(function(result) {
+            // console.log(result[1].dataValues);
+            req.allUser = result;
+            next();
+            // console.log(result);
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
 
 
 
@@ -160,5 +177,6 @@ module.exports = {
     query,
     token,
     emailCheck,
-    passwordHash
+    passwordHash,
+    getAllUserList
 }

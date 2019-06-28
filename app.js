@@ -5,7 +5,6 @@ var path = require('path');
 var multer = require('multer');
 
 
-
 //this is the first middleware - application middleware , all routes hit this middleware first
 myapp.use(function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -79,13 +78,15 @@ myapp.post('/user/register/userFormData', userController.emailCheck, userControl
     })
 });
 
-// edit user profile data
-myapp.put('/user/edit/userProfileData', userController.userEdit, function(req, res) {
+
+// user edit route
+myapp.put('/user/edit/userProfileData', authController.tokenVerify, authController.tokenemailvalidator, userController.userEdit, authController.tokenemailvalidator, function(req, res) {
     // console.log('user register data route');
     // res.status(200);
     res.send({
         "status": 201,
-        "message": "User data updated"
+        "message": "User data updated",
+        "info": req.userInfoo
     })
 });
 
@@ -100,6 +101,43 @@ myapp.post('/user/login', authController.validator, authController.checkPassword
         "info": req.userInfo
     })
 });
+
+
+// verify user token
+myapp.post('/token/verify', authController.tokenVerify, authController.tokenemailvalidator, function(req, res) {
+    res.send({
+        "status": 201,
+        "message": "User data updated",
+        "info": req.userInfoo
+    })
+});
+
+
+
+// get all user list route
+myapp.get('/user/list', authController.tokenVerify, authController.tokenemailvalidator, userController.getAllUserList, function(req, res) {
+    // usermodel.User.findAll({
+    //         attributes: ['id', 'fist_name']
+    //     })
+    //     .then(function(result) {
+    //         // response can be sent from within the middleware 
+    //         console.log(result);
+    //         res.status(200);
+    //         res.json(result);
+    //     })
+    //     .catch(function(err) {
+
+    //     })
+
+
+
+    res.send({
+        "status": 201,
+        "message": "User data fetched",
+        "allUser": req.allUser
+    })
+});
+
 
 
 
