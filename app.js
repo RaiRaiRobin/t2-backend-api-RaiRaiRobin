@@ -69,12 +69,13 @@ myapp.post('/user/register/userPhoto', upload.single('UserPhoto'), function(req,
 });
 
 // register form data
-myapp.post('/user/register/userFormData', userController.emailCheck, userController.passwordHash, userController.userRegister, function(req, res) {
+myapp.post('/user/register/userFormData', userController.emailCheck, userController.passwordHash, userController.userRegister, authController.jwtTokenGen, function(req, res) {
     // console.log('user register data route');
     // res.status(200);
     res.send({
         "status": 201,
-        "message": "user data registered"
+        "message": "user data registered",
+        "token": req.genToken
     })
 });
 
@@ -102,13 +103,33 @@ myapp.post('/user/login', authController.validator, authController.checkPassword
     })
 });
 
+// admin login route 
+myapp.post('/admin/login', authController.adminValidator, authController.checkPasswordMatch, authController.adminjwtTokenGen, function(req, res) {
+    // res.status(200);
+    res.send({
+        "status": 200,
+        "message": "Admin logged in",
+        "token": req.genToken,
+        "info": req.userInfo
+    })
+});
+
 
 // verify user token
 myapp.post('/token/verify', authController.tokenVerify, authController.tokenemailvalidator, function(req, res) {
     res.send({
         "status": 201,
-        "message": "User data updated",
+        "message": "Token Verified",
         "info": req.userInfoo
+    })
+});
+
+// verify admin token
+myapp.post('/admin/token/verify', authController.tokenVerify, authController.admintokenemailvalidator, function(req, res) {
+    res.send({
+        "status": 201,
+        "message": "Token Verified",
+        "info": req.adminInfoo
     })
 });
 
@@ -116,27 +137,60 @@ myapp.post('/token/verify', authController.tokenVerify, authController.tokenemai
 
 // get all user list route
 myapp.get('/user/list', authController.tokenVerify, authController.tokenemailvalidator, userController.getAllUserList, function(req, res) {
-    // usermodel.User.findAll({
-    //         attributes: ['id', 'fist_name']
-    //     })
-    //     .then(function(result) {
-    //         // response can be sent from within the middleware 
-    //         console.log(result);
-    //         res.status(200);
-    //         res.json(result);
-    //     })
-    //     .catch(function(err) {
-
-    //     })
-
-
-
     res.send({
         "status": 201,
         "message": "User data fetched",
         "allUser": req.allUser
     })
 });
+
+// get all users list route for admin
+myapp.get('/admin/list', authController.tokenVerify, authController.admintokenemailvalidator, userController.getAllUserList, function(req, res) {
+    res.send({
+        "status": 201,
+        "message": "User data fetched",
+        "allUser": req.allUser
+    })
+});
+
+// get all patients list route for admin
+myapp.get('/admin/patients/list', authController.tokenVerify, authController.admintokenemailvalidator, userController.getAllPatientList, function(req, res) {
+    res.send({
+        "status": 201,
+        "message": "Users data fetched",
+        "allUser": req.allUser
+    })
+});
+
+// get all doctors list route for admin
+myapp.get('/admin/doctors/list', authController.tokenVerify, authController.admintokenemailvalidator, userController.getDoctorinfo, function(req, res) {
+    res.send({
+        "status": 201,
+        "message": "Doctors data fetched",
+        "allUser": req.allUser
+    })
+});
+
+// get all nurses list route for admin
+myapp.get('/admin/nurses/list', authController.tokenVerify, authController.admintokenemailvalidator, userController.getNurseinfo, function(req, res) {
+    res.send({
+        "status": 201,
+        "message": "Nurses data fetched",
+        "allUser": req.allUser
+    })
+});
+
+// get patient info route for admin
+myapp.get('/admin/user/info/:id', authController.tokenVerify, authController.admintokenemailvalidator, userController.getPatientinfo, function(req, res) {
+    // console.log(req.allUser);
+    res.send({
+        "status": 201,
+        "message": "User info fetched",
+        "userInfo": req.allUser
+    })
+}); 
+
+
 
 
 

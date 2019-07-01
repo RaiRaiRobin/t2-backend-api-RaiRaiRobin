@@ -19,6 +19,7 @@ function userRegister(req, res, next) {
         })
         .then(function(result) {
             // console.log('data added');
+            req.body.email = req.body.Email;
             next();
         })
         .catch(function(err) {
@@ -37,9 +38,8 @@ function userEdit(req, res, next) {
             address: req.body.Address,
             dob: req.body.DOB,
             phone: req.body.Phone,
-        },
-        {
-            where: {id: req.body.Id}
+        }, {
+            where: { id: req.body.Id }
         })
         .then(function(result) {
             // console.log('data added');
@@ -117,11 +117,14 @@ function token(req, res, next) {
 
 // email Check
 function emailCheck(req, res, next) {
+    var photo = req.body.Photo;
     usermodel.findOne({
             where: { email: req.body.Email }
         })
         .then(function(result) {
             if (result.dataValues != '') {
+                var fs = require('fs');
+                fs.unlinkSync('./resources/images/profile/' + photo);
                 next({
                     "status": 409,
                     "message": "Email already exists"
@@ -152,10 +155,10 @@ function passwordHash(req, res, next) {
 
 
 // get all user list
-function getAllUserList(req, res, next){
-usermodel.findAll({
+function getAllUserList(req, res, next) {
+    usermodel.findAll({
             // where: { username: 'myuser' }
-            raw: true 
+            raw: true
         })
         .then(function(result) {
             // console.log(result[1].dataValues);
@@ -168,6 +171,79 @@ usermodel.findAll({
         })
 }
 
+// get all patient list
+function getAllPatientList(req, res, next) {
+    usermodel.findAll({
+            where: { user_type: 'patient' },
+            raw: true
+        })
+        .then(function(result) {
+            // console.log(result[1].dataValues);
+            req.allUser = result;
+            next();
+            // console.log(result);
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
+// get patient info
+function getPatientinfo(req, res, next) {
+    // console.log(req.params.id);
+    usermodel.findAll({
+            where: { id: req.params.id },
+            raw: true
+        })
+        .then(function(result) {
+            // console.log(result[1].dataValues);
+            req.allUser = result;
+            // console.log(req.allUser);
+            next();
+            // console.log(result);
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
+// get doctor info
+function getDoctorinfo(req, res, next) {
+    // console.log(req.params.id);
+    usermodel.findAll({
+            where: { user_type: 'doctor' },
+            raw: true
+        })
+        .then(function(result) {
+            // console.log(result[1].dataValues);
+            req.allUser = result;
+            // console.log(req.allUser);
+            next();
+            // console.log(result);
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+} 
+
+// get doctor info
+function getNurseinfo(req, res, next) {
+    // console.log(req.params.id);
+    usermodel.findAll({
+            where: { user_type: 'nurse' },
+            raw: true
+        })
+        .then(function(result) {
+            // console.log(result[1].dataValues);
+            req.allUser = result;
+            // console.log(req.allUser);
+            next();
+            // console.log(result);
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
 
 
 
@@ -178,5 +254,9 @@ module.exports = {
     token,
     emailCheck,
     passwordHash,
-    getAllUserList
+    getAllUserList,
+    getAllPatientList,
+    getPatientinfo,
+    getDoctorinfo,
+    getNurseinfo
 }
