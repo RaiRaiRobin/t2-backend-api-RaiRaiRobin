@@ -29,6 +29,7 @@ myapp.use(express.static(
 var mysequelize = require('./configs/dbconfigs.js');
 var mysequelize = require('./models/userModel.js');
 var mysequelize = require('./models/adminModel.js');
+var mysequelize = require('./models/checkupModel.js');
 
 
 
@@ -78,6 +79,17 @@ myapp.post('/user/register/userFormData', userController.emailCheck, userControl
         "token": req.genToken
     })
 });
+
+// admin register form data
+myapp.post('/user/register/userFormDataa', userController.emailCheck, userController.passwordHash, userController.userRegisterr, function(req, res) {
+    // console.log('user register data route');
+    // res.status(200);
+    res.send({
+        "status": 200,
+        "message": "New user registered"
+    })
+});
+
 
 
 // user edit route
@@ -181,7 +193,7 @@ myapp.get('/admin/nurses/list', authController.tokenVerify, authController.admin
 });
 
 // get patient info route for admin
-myapp.get('/admin/user/info/:id', authController.tokenVerify, authController.admintokenemailvalidator, function(req, res) {
+myapp.get('/admin/user/info/:id', authController.tokenVerify, authController.admintokenemailvalidator, userController.getUserDetail, function(req, res) {
     // console.log(req.allUser);
     res.send({
         "status": 200,
@@ -210,9 +222,38 @@ myapp.post('/user/search', userController.searchUser, function(req, res) {
     })
 }); 
 
+// delete user
+myapp.delete('/user/delete/:id', authController.tokenVerify, authController.admintokenemailvalidator, userController.deleteUser, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "User deleted successfully"
+    })
+}); 
 
+// checkup by nurse
+myapp.post('/user/checkup/nurse', authController.tokenVerify, authController.admintokenemailvalidator, userController.checkupNurse, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "Submited"
+    })
+}); 
 
+// get patient checkup list for doctor
+myapp.get('/user/checkup/doctor', authController.tokenVerify, authController.admintokenemailvalidator, userController.getCheckupListDoctor, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "Submited",
+        "allUser": req.User
+    })
+}); 
 
+// doctor checkup form data 
+myapp.put('/user/checkup/doctor', authController.tokenVerify, authController.tokenemailvalidator, userController.checkupDoctor, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "Submited"
+    })
+}); 
 
 myapp.use(function(err, req, res, next) {
 
