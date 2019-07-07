@@ -2,6 +2,8 @@ var usermodel = require('../models/userModel');
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 var saltRounds = 10;
+const Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 
 function userRegister(req, res, next) {
     // console.log(req.body);
@@ -30,8 +32,9 @@ function userRegister(req, res, next) {
 
 // user Edit
 function userEdit(req, res, next) {
-    // console.log(req.body);
-    usermodel.update({
+    console.log(req.body);
+    if (req.body.imageName == '') {
+        usermodel.update({
             first_name: req.body.FirstName,
             middle_name: req.body.MiddleName,
             last_name: req.body.LastName,
@@ -48,6 +51,29 @@ function userEdit(req, res, next) {
         .catch(function(err) {
             next({ "status": 500, "message": "DB Error" });
         })
+    }
+    else {
+        usermodel.update({
+            first_name: req.body.FirstName,
+            middle_name: req.body.MiddleName,
+            last_name: req.body.LastName,
+            address: req.body.Address,
+            dob: req.body.DOB,
+            phone: req.body.Phone,
+            photo: req.body.imageName
+        }, {
+            where: { id: req.body.Id }
+        })
+        .then(function(result) {
+            // console.log('data added');
+            var fs = require('fs');
+                fs.unlinkSync('./resources/images/profile/' + req.body.oldImageName);
+            next();
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+    }
 }
 
 
@@ -246,6 +272,28 @@ function getNurseinfo(req, res, next) {
 }
 
 
+function searchUser(req, re, next){
+ // console.log(req.body.search);
+ var search = req.body.search
+ usermodel.findAll({
+            where: { first_name: {
+                [Op.like]: '%' + search + '%'
+            } },
+            raw: true
+        })
+        .then(function(result) {
+            // console.log(result[1].dataValues);
+            req.User = result;
+            // console.log(req.allUser);
+            next();
+            // console.log(result);
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
+
 
 module.exports = {
     userRegister,
@@ -258,5 +306,6 @@ module.exports = {
     getAllPatientList,
     getPatientinfo,
     getDoctorinfo,
-    getNurseinfo
+    getNurseinfo,
+    searchUser
 }

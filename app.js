@@ -73,7 +73,7 @@ myapp.post('/user/register/userFormData', userController.emailCheck, userControl
     // console.log('user register data route');
     // res.status(200);
     res.send({
-        "status": 201,
+        "status": 200,
         "message": "user data registered",
         "token": req.genToken
     })
@@ -85,7 +85,7 @@ myapp.put('/user/edit/userProfileData', authController.tokenVerify, authControll
     // console.log('user register data route');
     // res.status(200);
     res.send({
-        "status": 201,
+        "status": 200,
         "message": "User data updated",
         "info": req.userInfoo
     })
@@ -118,7 +118,7 @@ myapp.post('/admin/login', authController.adminValidator, authController.checkPa
 // verify user token
 myapp.post('/token/verify', authController.tokenVerify, authController.tokenemailvalidator, function(req, res) {
     res.send({
-        "status": 201,
+        "status": 200,
         "message": "Token Verified",
         "info": req.userInfoo
     })
@@ -127,7 +127,7 @@ myapp.post('/token/verify', authController.tokenVerify, authController.tokenemai
 // verify admin token
 myapp.post('/admin/token/verify', authController.tokenVerify, authController.admintokenemailvalidator, function(req, res) {
     res.send({
-        "status": 201,
+        "status": 200,
         "message": "Token Verified",
         "info": req.adminInfoo
     })
@@ -138,7 +138,7 @@ myapp.post('/admin/token/verify', authController.tokenVerify, authController.adm
 // get all user list route
 myapp.get('/user/list', authController.tokenVerify, authController.tokenemailvalidator, userController.getAllUserList, function(req, res) {
     res.send({
-        "status": 201,
+        "status": 200,
         "message": "User data fetched",
         "allUser": req.allUser
     })
@@ -147,7 +147,7 @@ myapp.get('/user/list', authController.tokenVerify, authController.tokenemailval
 // get all users list route for admin
 myapp.get('/admin/list', authController.tokenVerify, authController.admintokenemailvalidator, userController.getAllUserList, function(req, res) {
     res.send({
-        "status": 201,
+        "status": 200,
         "message": "User data fetched",
         "allUser": req.allUser
     })
@@ -156,7 +156,7 @@ myapp.get('/admin/list', authController.tokenVerify, authController.admintokenem
 // get all patients list route for admin
 myapp.get('/admin/patients/list', authController.tokenVerify, authController.admintokenemailvalidator, userController.getAllPatientList, function(req, res) {
     res.send({
-        "status": 201,
+        "status": 200,
         "message": "Users data fetched",
         "allUser": req.allUser
     })
@@ -165,7 +165,7 @@ myapp.get('/admin/patients/list', authController.tokenVerify, authController.adm
 // get all doctors list route for admin
 myapp.get('/admin/doctors/list', authController.tokenVerify, authController.admintokenemailvalidator, userController.getDoctorinfo, function(req, res) {
     res.send({
-        "status": 201,
+        "status": 200,
         "message": "Doctors data fetched",
         "allUser": req.allUser
     })
@@ -174,23 +174,41 @@ myapp.get('/admin/doctors/list', authController.tokenVerify, authController.admi
 // get all nurses list route for admin
 myapp.get('/admin/nurses/list', authController.tokenVerify, authController.admintokenemailvalidator, userController.getNurseinfo, function(req, res) {
     res.send({
-        "status": 201,
+        "status": 200,
         "message": "Nurses data fetched",
         "allUser": req.allUser
     })
 });
 
 // get patient info route for admin
-myapp.get('/admin/user/info/:id', authController.tokenVerify, authController.admintokenemailvalidator, userController.getPatientinfo, function(req, res) {
+myapp.get('/admin/user/info/:id', authController.tokenVerify, authController.admintokenemailvalidator, function(req, res) {
     // console.log(req.allUser);
     res.send({
-        "status": 201,
+        "status": 200,
         "message": "User info fetched",
         "userInfo": req.allUser
     })
 }); 
 
 
+// update user picture
+myapp.put('/user/update/userPhoto', authController.tokenVerify, authController.tokenemailvalidator, upload.single('UserPhoto'), function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "User profile picture updated",
+        "name": req.testVall
+    })
+}); 
+
+
+// user search
+myapp.post('/user/search', userController.searchUser, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "User search result",
+        "allUser": req.User
+    })
+}); 
 
 
 
