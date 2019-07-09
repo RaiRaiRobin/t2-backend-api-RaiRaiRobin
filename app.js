@@ -4,6 +4,37 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var multer = require('multer');
 
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+
+let initCallback;
+
+// debugger;
+var swaggerDefinition = {
+    info: {
+        // API informations (required)
+        title: 'Patient Information Manager', // Title (required)
+        version: 'v1', // Version (required)
+        description: 'API Documetation', // Description (optional)
+    },
+    host: 'localhost:3000', // Host (optional)
+    basePath: '/', // Base path (optional)
+    securityDefinitions: {
+        bearerAuth: {
+            type: 'apiKey',
+            name: 'authorization',
+            scheme: 'bearer',
+            in: 'header'
+        }
+    }
+}
+var options = {
+    swaggerDefinition,
+    apis: ['./index.js']
+}
+const swaggerSpec = swaggerJSDoc(options);
+myapp.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 //this is the first middleware - application middleware , all routes hit this middleware first
 myapp.use(function(req, res, next) {
@@ -58,6 +89,7 @@ var adminRoutes = require('./routes/adminRoutes')(myapp);
 var userRoutes = require('./routes/userRoutes')(myapp);
 
 
+
 // upload register profile photo
 myapp.post('/user/register/userPhoto', upload.single('UserPhoto'), function(req, res) {
     // console.log(req.testVall);
@@ -94,8 +126,6 @@ myapp.post('/user/register/userFormDataa', userController.emailCheck, userContro
 
 // user edit route
 myapp.put('/user/edit/userProfileData', authController.tokenVerify, authController.tokenemailvalidator, userController.userEdit, authController.tokenemailvalidator, function(req, res) {
-    // console.log('user register data route');
-    // res.status(200);
     res.send({
         "status": 200,
         "message": "User data updated",
@@ -156,6 +186,16 @@ myapp.get('/user/list', authController.tokenVerify, authController.tokenemailval
     })
 });
 
+
+// get all checkup list route
+myapp.get('/admin/checkup/list', authController.tokenVerify, authController.tokenemailvalidator, userController.getAllCheckupList, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "User checkup data fetched",
+        "allUser": req.User
+    })
+});
+
 // get all users list route for admin
 myapp.get('/admin/list', authController.tokenVerify, authController.admintokenemailvalidator, userController.getAllUserList, function(req, res) {
     res.send({
@@ -200,7 +240,7 @@ myapp.get('/admin/user/info/:id', authController.tokenVerify, authController.adm
         "message": "User info fetched",
         "userInfo": req.allUser
     })
-}); 
+});
 
 
 // update user picture
@@ -210,7 +250,7 @@ myapp.put('/user/update/userPhoto', authController.tokenVerify, authController.t
         "message": "User profile picture updated",
         "name": req.testVall
     })
-}); 
+});
 
 
 // user search
@@ -220,7 +260,7 @@ myapp.post('/user/search', userController.searchUser, function(req, res) {
         "message": "User search result",
         "allUser": req.User
     })
-}); 
+});
 
 // delete user
 myapp.delete('/user/delete/:id', authController.tokenVerify, authController.admintokenemailvalidator, userController.deleteUser, function(req, res) {
@@ -228,7 +268,15 @@ myapp.delete('/user/delete/:id', authController.tokenVerify, authController.admi
         "status": 200,
         "message": "User deleted successfully"
     })
-}); 
+});
+
+// delete checkup record
+myapp.delete('/checkup/delete/:id', authController.tokenVerify, authController.admintokenemailvalidator, userController.deleteCheckup, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "Checkup record deleted successfully"
+    })
+});
 
 // checkup by nurse
 myapp.post('/user/checkup/nurse', authController.tokenVerify, authController.admintokenemailvalidator, userController.checkupNurse, function(req, res) {
@@ -236,7 +284,7 @@ myapp.post('/user/checkup/nurse', authController.tokenVerify, authController.adm
         "status": 200,
         "message": "Submited"
     })
-}); 
+});
 
 // get patient checkup list for doctor
 myapp.get('/user/checkup/doctor', authController.tokenVerify, authController.admintokenemailvalidator, userController.getCheckupListDoctor, function(req, res) {
@@ -245,7 +293,7 @@ myapp.get('/user/checkup/doctor', authController.tokenVerify, authController.adm
         "message": "Submited",
         "allUser": req.User
     })
-}); 
+});
 
 // doctor checkup form data 
 myapp.put('/user/checkup/doctor', authController.tokenVerify, authController.tokenemailvalidator, userController.checkupDoctor, function(req, res) {
@@ -253,7 +301,60 @@ myapp.put('/user/checkup/doctor', authController.tokenVerify, authController.tok
         "status": 200,
         "message": "Submited"
     })
-}); 
+});
+
+// get patient's checkup form data 
+myapp.get('/patient/checkupList/:id', authController.tokenVerify, authController.tokenemailvalidator, userController.getPatientRecords, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "Patient data fetched",
+        "allUser":req.User
+    })
+});
+
+// get all patient's checkup form data 
+myapp.get('/patient/checkupRecord/', authController.tokenVerify, authController.tokenemailvalidator, userController.getAllPatientRecords, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "Patient data fetched",
+        "allUser":req.User
+    })
+});
+
+// get all patient's count 
+myapp.get('/admin/count/patient', authController.tokenVerify, authController.tokenemailvalidator, userController.getAllPatientCount, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "Patient count fetched",
+        "count":req.User
+    })
+});
+
+myapp.get('/admin/count/doctor', authController.tokenVerify, authController.tokenemailvalidator, userController.getAllDoctorCount, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "Doctor count fetched",
+        "count":req.User
+    })
+});
+
+
+myapp.get('/admin/count/nurse', authController.tokenVerify, authController.tokenemailvalidator, userController.getAllNurseCount, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "Nurse count fetched",
+        "count":req.User
+    })
+});
+
+myapp.get('/admin/count/checkup', authController.tokenVerify, authController.tokenemailvalidator, userController.getAllCheckupCount, function(req, res) {
+    res.send({
+        "status": 200,
+        "message": "Checkup count fetched",
+        "count":req.User
+    })
+});
+
 
 myapp.use(function(err, req, res, next) {
 

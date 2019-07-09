@@ -337,6 +337,22 @@ function deleteUser(req, res, next) {
         })
 }
 
+// delete checkup
+function deleteCheckup(req, res, next) {
+    checkupmodel.destroy({
+            where: {
+                id: req.params.id
+            },
+            raw: true
+        })
+        .then(function(result) {
+            next();
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
 // get User Detail
 function getUserDetail(req, res, next) {
     // console.log(req.params.id);
@@ -374,10 +390,10 @@ function checkupNurse(req, res, next) {
         })
 }
 
-function getCheckupListDoctor(req, res, next){
+function getCheckupListDoctor(req, res, next) {
     checkupmodel.findAll({
             where: {
-                prescription: null 
+                prescription: null
             },
             raw: true
         })
@@ -393,21 +409,123 @@ function getCheckupListDoctor(req, res, next){
         })
 }
 
-function checkupDoctor(req, res, next){
-    checkupmodel.update({
-                prescription: req.body.Prescription,
-                description: req.body.Description,
-            }, {
-                where: { id: req.body.Id }
-            })
-            .then(function(result) {
-                // console.log('data added');
-                next();
-            })
-            .catch(function(err) {
-                next({ "status": 500, "message": "DB Error" });
-            })
+function getPatientRecords(req, res, next) {
+    checkupmodel.findAll({
+            where: {
+                id: req.params.id
+            },
+            raw: true
+        })
+        .then(function(result) {
+            // console.log(result[1].dataValues);
+            req.User = result;
+            // console.log(req.allUser);
+            next();
+            // console.log(result[0]);
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
 }
+
+function getAllCheckupList(req, res, next) {
+    checkupmodel.findAll({
+            raw: true
+        })
+        .then(function(result) {
+            // console.log(result[1].dataValues);
+            req.User = result;
+            // console.log(req.allUser);
+            next();
+            // console.log(result[0]);
+            // console.log(req.User);
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
+function checkupDoctor(req, res, next) {
+    checkupmodel.update({
+            prescription: req.body.Prescription,
+            description: req.body.Description,
+        }, {
+            where: { id: req.body.Id }
+        })
+        .then(function(result) {
+            // console.log('data added');
+            next();
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
+function getAllPatientRecords(req, res, next) {
+    checkupmodel.findAll({
+            raw: true
+        })
+        .then(function(result) {
+            // console.log(result[1].dataValues);
+            req.User = result;
+            // console.log(req.allUser);
+            next();
+            // console.log(result[0]);
+            // console.log(req.User);
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
+function getAllPatientCount(req, res, next) {
+    usermodel.count().then(c => {
+            req.User = c;
+            // console.log(req.User);
+            next();
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
+function getAllDoctorCount(req, res, next) {
+    usermodel.count({
+            where: { user_type: "doctor" }
+        }).then(c => {
+            req.User = c;
+            // console.log(req.User);
+            next();
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
+function getAllNurseCount(req, res, next) {
+    usermodel.count({
+            where: { user_type: "nurse" }
+        }).then(c => {
+            req.User = c;
+            // console.log(req.User);
+            next();
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
+function getAllCheckupCount(req, res, next) {
+    checkupmodel.count().then(c => {
+            req.User = c;
+            // console.log(req.User);
+            next();
+        })
+        .catch(function(err) {
+            next({ "status": 500, "message": "DB Error" });
+        })
+}
+
 
 module.exports = {
     userRegister,
@@ -427,5 +545,13 @@ module.exports = {
     getUserDetail,
     checkupNurse,
     getCheckupListDoctor,
-    checkupDoctor
+    checkupDoctor,
+    getAllCheckupList,
+    deleteCheckup,
+    getPatientRecords,
+    getAllPatientRecords,
+    getAllPatientCount,
+    getAllDoctorCount,
+    getAllNurseCount,
+    getAllCheckupCount
 }
