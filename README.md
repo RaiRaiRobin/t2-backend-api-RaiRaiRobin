@@ -8,8 +8,7 @@ Batch: Jan19C
 Brief description of the domain of your project!
 
 ## List of Main Features
-List out 3/4 main technical features of your project
+The main features of CRUD operation. Different user types can be created in this application. Admins has the right to view user and delete the users. Different user types has different user permissions. Patient can only view its health report and nurse and doctor user type can store the patient's health checkup record.
 
-## API Documentation
-List out your main APIs and its sample input and output!
+
 
