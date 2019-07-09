@@ -160,4 +160,18 @@ describe('users', () => {
         });
     });
 });
+
+// describe('users', () => {
+//     describe('/Delete user', () => {
+//         it('it should delete user', (done) => {
+//             // chai.request(baseUrlRoutes)
+//             chai.request(myapp)
+//                 .delete('/user/delete/22')
+//                 .end((err, res) => {
+//                     res.should.have.status(200);
+//                     done();
+//                 });
+//         });
+//     });
+// });
 // expect(result).to.have.deep.property('[0].title', 'expected_title_1');
