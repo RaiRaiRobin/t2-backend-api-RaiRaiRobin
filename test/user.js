@@ -99,33 +99,65 @@ describe('Users', function() {
 // /*
 //  * Test the /GET route
 //  */
+// describe('users', () => {
+//     describe('/GET users', () => {
+//         it('it should GET all the users', (done) => {
+//             // chai.request(baseUrlRoutes)
+//             chai.request(myapp)
+//                 .get('/user/list')
+//                 .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhaS5yaWJpbjEwMDBAZ21haWwuY29tIiwiYWNjZXNzTGV2ZWwiOiJzdXBlcnVzZXIiLCJpYXQiOjE1NjI1NTI4NTMsImV4cCI6MTU2MjU4ODg1M30.POs01WDCAZZ-fU0aSJ6xOvwLagTs17ZE-R_t7VqMFeg')
+//                 .end((err, res) => {
+//                     // console.log(err);
+//                     // console.log(res);
+//                     res.should.have.status(200);
+//                     // res.body.should.be.an('array');
+//                     res.body.should.all.have.property('id');
+//                     res.body.should.all.have.property('email');
+//                     res.body.should.all.have.property('address');
+//                     res.body.should.all.have.property('dob');
+//                     res.body.should.all.have.property('first_name');
+//                     res.body.should.all.have.property('middle_name');
+//                     res.body.should.all.have.property('last_name');
+//                     res.body.should.all.have.property('phone');
+//                     res.body.should.all.have.property('photo');
+//                     res.body.should.all.have.property('user_type');
+//                     res.body.length.should.be.above(0);
+//                     done();
+//                 });
+//         });
+//     });
+
+// });
+
 describe('users', () => {
-    describe('/GET users', () => {
+    describe('/POST users', () => {
         it('it should GET all the users', (done) => {
             // chai.request(baseUrlRoutes)
             chai.request(myapp)
-                .get('/user/list')
-                .set('authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InJhaS5yaWJpbjEwMDBAZ21haWwuY29tIiwiYWNjZXNzTGV2ZWwiOiJzdXBlcnVzZXIiLCJpYXQiOjE1NjI1NTI4NTMsImV4cCI6MTU2MjU4ODg1M30.POs01WDCAZZ-fU0aSJ6xOvwLagTs17ZE-R_t7VqMFeg')
+                .post('/user/search')
                 .end((err, res) => {
-                    // console.log(err);
-                    // console.log(res);
                     res.should.have.status(200);
-                    res.body.should.be.an('array');
-                    // res.body.should.all.have.property('id');
-                    // res.body.should.all.have.property('email');
-                    // res.body.should.all.have.property('address');
-                    // res.body.should.all.have.property('dob');
-                    // res.body.should.all.have.property('first_name');
-                    // res.body.should.all.have.property('middle_name');
-                    // res.body.should.all.have.property('last_name');
-                    // res.body.should.all.have.property('phone');
-                    // res.body.should.all.have.property('photo');
-                    // res.body.should.all.have.property('user_type');
-                    // res.body.length.should.be.above(0);
                     done();
                 });
         });
     });
+});
 
+describe('users', () => {
+    describe('/POST login', () => {
+        it('it should log in user', (done) => {
+            // chai.request(baseUrlRoutes)
+            chai.request(myapp)
+                .post('/user/login')
+                .send({
+                    "email": 'rai.rai.ribin1000@gmail.com',
+                    "password": 'asd',
+                })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+    });
 });
 // expect(result).to.have.deep.property('[0].title', 'expected_title_1');
